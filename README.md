@@ -1,2 +1,3 @@
-# GP3.Coursework
- Coursework submission for Games Parogramming 3
+# Coursework Submission for Games Programming 3
+
+James Paton (S1111175) 
