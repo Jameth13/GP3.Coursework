@@ -30,6 +30,7 @@ public:
 	};
 
 	void AddRigidbody(RigidBody* r, btCollisionShape* collisionShape);
+	void RemoveRigidbody(RigidBody* body);
 	void PreUpdate();
 	void Update();
 	void UpdateCollision();

@@ -29,7 +29,6 @@ void LightObject::Start()
 
 
 void LightObject::Update() {}
-void LightObject::OnCollide(RigidBody* other) {}
 
 void LightObject::RenderForward()
 {

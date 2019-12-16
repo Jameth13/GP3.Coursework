@@ -3,6 +3,17 @@
 #include "CollisionShape.h"
 #include "GameObject.h"
 
+RigidBody::RigidBody() {}
+
+RigidBody::~RigidBody()
+{
+	delete m_shape;
+	delete m_mState;
+
+	//Deleting this seems to interfere with bullet's own clean up.
+	//delete m_rigidBody;
+}
+
 void RigidBody::OnAttach() {}
 void RigidBody::OnCollide(RigidBody* other) {}
 void RigidBody::Start() {}

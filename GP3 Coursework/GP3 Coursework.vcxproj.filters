@@ -26,6 +26,9 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{f4dcdfb0-cf1e-47f8-9189-9fcd8d609466}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Support">
+      <UniqueIdentifier>{ab5c8f4a-9b42-482b-b041-28377559d228}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraComponent.cpp">
@@ -61,9 +64,6 @@
     <ClCompile Include="CollisionShape.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Vector3.cpp" />
-    <ClCompile Include="Quaternion.cpp" />
-    <ClCompile Include="Time.cpp" />
     <ClCompile Include="Resources.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -130,6 +130,15 @@
     <ClCompile Include="Canvas.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h">
@@ -183,9 +192,6 @@
     <ClInclude Include="Resources.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="Time.h" />
-    <ClInclude Include="Vector3.h" />
     <ClInclude Include="common.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -245,6 +251,15 @@
     </ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

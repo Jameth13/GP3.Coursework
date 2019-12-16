@@ -98,8 +98,8 @@ private:
 	void RenderDepthCubemap(Shader* shader, GLuint buffer, LightPoint* light);
 	void RenderDepthCubemap(Shader* shader, GLuint buffer, LightSpot* light);
 	void RenderDepthCubemap(Shader* shader, GLuint buffer, glm::vec3 lightPos, glm::vec3 lightBrightness);
-	GLuint depthCubemapBuffer[MAX_LIGHTS_POINT + MAX_LIGHTS_SPOT];
-	GLuint depthCubemap[MAX_LIGHTS_POINT + MAX_LIGHTS_SPOT];
+	GLuint depthCubemapBuffers[MAX_LIGHTS_POINT + MAX_LIGHTS_SPOT];
+	GLuint depthCubemaps[MAX_LIGHTS_POINT + MAX_LIGHTS_SPOT];
 
 
 	//HDR

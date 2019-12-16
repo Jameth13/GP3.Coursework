@@ -58,5 +58,4 @@ void Generic::Start()
 }
 
 void Generic::Update() {}
-void Generic::OnCollide(RigidBody* other) {}
 void Generic::RenderForward() {}

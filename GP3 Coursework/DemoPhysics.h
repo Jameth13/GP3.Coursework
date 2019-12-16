@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "Canvas.h"
 #include "Physics.h"
+#include "Generic.h"
 
 class DemoPhysics : public GameObject
 {
@@ -20,4 +21,7 @@ private:
 	InputManager* input = InputManager::GetInstance();
 	Canvas* canvas = Canvas::GetInstance();
 	Physics* physics = Physics::GetInstance();
+
+	Generic* removeDemo;
+	bool removeOnce = true;
 };

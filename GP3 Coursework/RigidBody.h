@@ -12,6 +12,9 @@ private:
 	btMotionState* m_mState = nullptr;
 	float mass;
 public:
+	RigidBody();
+	~RigidBody();
+
 	void OnAttach();
 	void OnCollide(RigidBody* other);
 	void Start();

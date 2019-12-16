@@ -10,7 +10,6 @@ public:
 	void Awake();
 	void Start();
 	void Update();
-	void OnCollide(RigidBody* other);
 	void RenderForward();
 };
 

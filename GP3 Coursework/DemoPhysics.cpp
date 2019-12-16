@@ -28,8 +28,11 @@ void DemoPhysics::Start()
 	cubeGround->GetComponent<RigidBody>()->Init(CollisionShape::InitBox(Vector3(groundSize, groundThickness / 2.0f, groundSize)));
 	cubeGround->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 
+
 	float offset = groundHeight + groundThickness;
-	for (unsigned int i = 0u; i < 40; i++)
+	int towerItems = 40;
+
+	for (unsigned int i = 0u; i < towerItems; i++)
 	{
 		if (i % 2 == 0)
 		{
@@ -45,6 +48,7 @@ void DemoPhysics::Start()
 			cube->GetComponent<Transform>()->SetPos(Vector3(0.0f, offset + 2.0f * i, -50.0f));
 			cube->GetComponent<Transform>()->SetScale(Vector3(1.0f, 1.0f, 1.0f));
 			cube->GetComponent<RigidBody>()->Init(CollisionShape::InitBox(Vector3(1.0f, 1.0f, 1.0f)));
+			removeDemo = cube;
 		}
 		else
 		{
@@ -69,9 +73,16 @@ void DemoPhysics::Update()
 	Vector3 posScale = Vector3(16.0f, 16.0f, 0.8f);
 	Vector3 color = Vector3(0.1f, 0.4f, 0.8f);
 	if (input->GetKeyToggle(SDLK_p))
-		canvas->RenderText("Number of collisions " + std::to_string(physics->numCollisions), posScale, color);
+		canvas->RenderText("Number of collisions: " + std::to_string(physics->numCollisions), posScale, color);
 	else
 		canvas->RenderText("Press P to begin physics simulation.", posScale, color);
 
+	if (input->GetKeyDown(SDLK_k) && removeOnce)
+	{
+		removeOnce = false;
+		removeDemo->RemoveComponents<ForcePush>();
+		physics->RemoveRigidbody(removeDemo->GetComponent<RigidBody>());
+	}
 }
+
 void DemoPhysics::RenderForward() {}

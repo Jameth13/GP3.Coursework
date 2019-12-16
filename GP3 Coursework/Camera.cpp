@@ -17,5 +17,4 @@ void Camera::Awake()
 
 void Camera::Start() {}
 void Camera::Update() {}
-void Camera:: OnCollide(RigidBody* other) {}
 void Camera::RenderForward() {}

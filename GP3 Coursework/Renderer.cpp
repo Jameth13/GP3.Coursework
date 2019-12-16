@@ -150,7 +150,7 @@ void Renderer::InitBuffers()
 	//Render framebuffer
 	glGenFramebuffers(1, &renderBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, renderBuffer);
-	//PreHDR texture
+	//Render texture
 	glGenTextures(1, &renderColor);
 	glBindTexture(GL_TEXTURE_2D, renderColor);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, displayWidth, displayHeight, 0, GL_RGB, GL_FLOAT, NULL);
@@ -162,7 +162,7 @@ void Renderer::InitBuffers()
 	GLuint hdrPreAttachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, hdrPreAttachments);
 	
-	//PreHDR depth buffer
+	//Render depth buffer
 	GLuint renderDepth;
 	glGenRenderbuffers(1, &renderDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, renderDepth);
@@ -265,9 +265,9 @@ void Renderer::InitBuffers()
 	//Depth Cubemap framebuffers for Point and Spot lights.
 	for (unsigned int i = 0u; i < MAX_LIGHTS_POINT + MAX_LIGHTS_SPOT; i++)
 	{
-		glGenFramebuffers(1, &depthCubemapBuffer[i]);
-		glGenTextures(1, &depthCubemap[i]);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap[i]);
+		glGenFramebuffers(1, &depthCubemapBuffers[i]);
+		glGenTextures(1, &depthCubemaps[i]);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemaps[i]);
 		for (unsigned int face = 0; face < 6; face++)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -277,8 +277,8 @@ void Renderer::InitBuffers()
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 		//Depth Cubemap depth buffer
-		glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapBuffer[i]);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap[i], 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapBuffers[i]);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemaps[i], 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 
@@ -426,18 +426,18 @@ void Renderer::Render()
 	meshRenderers = goMan->GetComponents<MeshRenderer>();
 
 
-	//Render depth to texture
+	//Render depth to depth textures
 	auto lightsDirectional = goMan->GetComponents<LightDirectional>();
 	for (unsigned int i = 0u; lightsDirectional.size() && i < MAX_LIGHTS_DIR; i++)
 		RenderDepthMap(shaderDepthMap, depthMapBuffer, lightsDirectional[i], i);
 
 	auto lightsPoint = goMan->GetComponents<LightPoint>();
 	for (unsigned int i = 0u; i < lightsPoint.size() && i < MAX_LIGHTS_POINT; i++)
-		RenderDepthCubemap(shaderDepthCubemap, depthCubemapBuffer[i], lightsPoint[i]);
+		RenderDepthCubemap(shaderDepthCubemap, depthCubemapBuffers[i], lightsPoint[i]);
 
 	auto lightsSpot = goMan->GetComponents<LightSpot>();
 	for (unsigned int i = 0u; i < lightsSpot.size() && i < MAX_LIGHTS_SPOT; i++)
-		RenderDepthCubemap(shaderDepthCubemap, depthCubemapBuffer[MAX_LIGHTS_POINT + i], lightsSpot[i]);
+		RenderDepthCubemap(shaderDepthCubemap, depthCubemapBuffers[MAX_LIGHTS_POINT + i], lightsSpot[i]);
 
 
 	//Deferred geometry and lighting pass
@@ -629,13 +629,13 @@ void Renderer::DeferredLighting(Shader* shader, GLuint buffer)
 	for (unsigned int i = 0; i < MAX_LIGHTS_POINT; i++)
 	{
 			glActiveTexture(GL_TEXTURE5 + i);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap[i]);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemaps[i]);
 	}
 
 	for (unsigned int i = 0; i < MAX_LIGHTS_SPOT; i++)
 	{
 		glActiveTexture(GL_TEXTURE5 + MAX_LIGHTS_POINT + i);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap[MAX_LIGHTS_POINT + i]);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemaps[MAX_LIGHTS_POINT + i]);
 	}
 
 	GameObjectManager* goMan = GameObjectManager::GetInstance();
@@ -743,13 +743,13 @@ void Renderer::Quit()
 	//Delete buffers
 	unsigned int buffers[] = { fontVBO, skyboxVBO, gBuffer, quadVBO, depthMapBuffer, renderBuffer, hdrBuffer };
 	glDeleteBuffers(sizeof(buffers) / sizeof(buffers[0]), buffers);
-	glDeleteBuffers(sizeof(depthCubemapBuffer) / sizeof(depthCubemapBuffer[0]), depthCubemapBuffer);
+	glDeleteBuffers(sizeof(depthCubemapBuffers) / sizeof(depthCubemapBuffers[0]), depthCubemapBuffers);
 	glDeleteBuffers(sizeof(blurBuffers) / sizeof(blurBuffers[0]), blurBuffers);
 
 	//Delete buffer textures
 	unsigned int bufferTextures[] = { skyboxCubemap, gPosition, gNormal, gAlbedo, gMaps, depthMap, renderColor, hdrColor, hdrBright };
 	glDeleteTextures(sizeof(bufferTextures) / sizeof(bufferTextures[0]), bufferTextures);
-	glDeleteTextures(sizeof(depthCubemap) / sizeof(depthCubemap[0]), depthCubemap);
+	glDeleteTextures(sizeof(depthCubemaps) / sizeof(depthCubemaps[0]), depthCubemaps);
 	glDeleteTextures(sizeof(blurColor) / sizeof(blurColor[0]), blurColor);
 
 	//Delete vertext array objects
@@ -757,8 +757,15 @@ void Renderer::Quit()
 	glDeleteVertexArrays(sizeof(vaos) / sizeof(vaos[0]), vaos);
 
 	//Delete shaders
-
-	//Delete textures
+	delete shaderFont;
+	delete shaderSkybox;
+	delete shaderDeferredGeometry;
+	delete shaderDeferredLighting;
+	delete shaderHDR;
+	delete shaderBlur;
+	delete shaderPost;
+	delete shaderDepthMap;
+	delete shaderDepthCubemap;
 
 	//Delete singleton
 	instance = nullptr;

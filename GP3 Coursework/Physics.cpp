@@ -23,6 +23,20 @@ void Physics::AddRigidbody(RigidBody* body, btCollisionShape* collisionShape)
 	bodyMap[collisionShape] = body;
 }
 
+void Physics::RemoveRigidbody(RigidBody* body)
+{
+	for (auto it = m_rbodies.begin(); it != m_rbodies.end(); )
+	{
+		if ((*it) == body)
+		{
+			m_world->removeRigidBody(body->Get());
+			body->gameObject->RemoveComponents<RigidBody>();
+			it = m_rbodies.erase(it);
+		}
+		else it++;
+	}
+}
+
 void Physics::PreUpdate()
 {
 	for (auto r : m_rbodies)

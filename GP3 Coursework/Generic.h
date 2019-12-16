@@ -16,7 +16,6 @@ public:
 	void Awake();
 	void Start();
 	void Update();
-	virtual void OnCollide(RigidBody* other);
 	void RenderForward();
 
 private:

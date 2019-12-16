@@ -25,8 +25,8 @@ public:
 	virtual void Awake() = 0;
 	virtual void Start() = 0;
 	virtual void Update() = 0;
-	virtual void OnCollide(RigidBody* other);
 	virtual void RenderForward() = 0;
+	void OnCollide(RigidBody* other);
 
 	template<typename T> void RemoveComponents();
 	template<typename T> T* GetComponent();

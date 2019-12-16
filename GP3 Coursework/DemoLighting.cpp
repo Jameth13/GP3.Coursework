@@ -17,13 +17,13 @@ void DemoLighting::Start()
 	lightDirectional->GetComponent<LightDirectional>()->shadowMapSizes = Vector3(200.0f, 160.0f, 300.0f);
 
 
-	//Bloom demmo, light
+	//Bloom demo, light
 	pointLightBloom->GetComponent<Transform>()->SetPos(Vector3(8.0f, 10.0f, 1.0f));
 	pointLightBloom->AddComponent<Oscillate>()->Set(10.0f, 1.0f, Vector3(1.0f, 0.0f, 0.0f));
 	pointLightBloom->AddComponent<LightPoint>()->color = pointLightBloom->color;
 	pointLightBloom->GetComponent<LightPoint>()->SetBrightness(1e6f, 3.0f, 6.0f);
 
-	//Bloom demmo, monkeys
+	//Bloom demo, monkeys
 	for (int xPos = 0; xPos < 8; xPos++)
 		for (int zPos = 0; zPos < 2; zPos++)
 		{
@@ -32,7 +32,7 @@ void DemoLighting::Start()
 		}
 
 
-	//Red and green light demo
+	//Red and green lighting demo
 	pointLightRed->GetComponent<Transform>()->SetPos(Vector3(0.0f, 0.0f, 11.0f));
 	pointLightRed->AddComponent<Oscillate>()->Set(9.0f, 2.0f, Vector3(0.0f, 0.0f, 2.0f));
 	pointLightRed->AddComponent<LightPoint>()->color = pointLightRed->color;
